@@ -3,21 +3,6 @@
   "outputDirectory": "out",
   "framework": "nextjs",
   "env": {
-    "NEXT_PUBLIC_API_URL": "@api-url"
-  },
-  "functions": {
-    "server/main.py": {
-      "runtime": "python3.9"
-    }
-  },
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/server/main.py"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
-  ]
+    "NEXT_PUBLIC_API_URL": "https://api.example.com"
+  }
 }
