@@ -1,0 +1,37 @@
+skr_agents:
+  - id: cesai
+    module: scout-analytics
+    type: creative_insights_assistant
+    deployment_status: production-ready
+    integration_points:
+      - product-mix
+      - consumer-insights
+    source_files:
+      - components/AskCES.tsx
+      - public/ai/ask_ces_steps.md
+      - dashboard_end_state.yaml
+      - layout.tsx
+    orchestration_layer: pulser_4.0.0
+    qa_status: validated
+    live_binding: true
+    notes:
+      - CESAI deployed and mounted globally
+      - Ask CES UI functional
+      - Claude/Devstral API hook pending
+      - QA via Caca planned but not yet enabled
+    archived_at: 2025-06-15T00:00:00Z
+    final_system_state:
+      agent_config: done
+      task_completion: done
+      deployment_registry: done
+      skr_archive: done
+      qa_status: validated
+      live_ai_hook: enabled
+    suggested_commands:
+      - enable_ask_ces_live_query
+      - enable_caca_dashboard_validation
+    status_summary:
+      mounted_and_operational: true
+      fully_documented_and_archived: true
+      ready_for_live_model_integration: true
+      queued_for_qa_validation: true 
