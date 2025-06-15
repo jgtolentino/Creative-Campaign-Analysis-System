@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { ProcessCampaigns } from '@/components/ProcessCampaigns';
 import { CreativeInsightsComponent } from '@/components/CreativeInsightsComponent';
 import { HealthCheck } from '@/components/HealthCheck';
-import { Target, Upload, BarChart3, Activity } from 'lucide-react';
+import { PageIndexDashboard } from '@/components/PageIndexDashboard';
+import { Target, Upload, BarChart3, Activity, Database } from 'lucide-react';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('process');
@@ -21,6 +22,7 @@ export default function Home() {
   const tabs = [
     { id: 'process', label: 'Campaign Processing', icon: Upload },
     { id: 'insights', label: 'Creative Insights', icon: Target },
+    { id: 'pageindex', label: 'PageIndex System', icon: Database },
     { id: 'analytics', label: 'Campaign Analytics', icon: BarChart3 },
     { id: 'health', label: 'System Health', icon: Activity }
   ];
@@ -104,6 +106,18 @@ export default function Home() {
               </p>
             </div>
             <CreativeInsightsComponent />
+          </div>
+        )}
+
+        {activeTab === 'pageindex' && (
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900 mb-2">PageIndex System</h2>
+              <p className="text-gray-600 mb-6">
+                ColPali-style semantic indexing, cataloging, and file-level linking for creative content discovery.
+              </p>
+            </div>
+            <PageIndexDashboard />
           </div>
         )}
 
