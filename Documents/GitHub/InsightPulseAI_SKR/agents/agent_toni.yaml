@@ -6,6 +6,7 @@ reporting_to: Claudia
 status: active
 description: >
   Toni handles contracts, NDAs, MSAs, and SOWs. She ensures that InsightPulseAI’s legal and procurement workflows are efficient and enforceable.
+
 competencies:
   - Legal Drafting
   - Procurement Oversight
@@ -25,3 +26,5 @@ output_format:
   - Procurement alignment reports
 visibility: internal
 keywords: [legal, contracts, SOW, procurement, InsightPulseAI]
+resource_quota: 5000_tokens_per_min
+timeout_ms: 90000

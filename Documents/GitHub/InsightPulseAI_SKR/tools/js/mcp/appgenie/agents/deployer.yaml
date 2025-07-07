@@ -6,6 +6,7 @@ version: 1.0.0
 # Runtime configuration
 type: deployment.handler
 runtime: node
+entrypoint: deploy/index.sh
 timeout: 120
 
 # Input schema
@@ -663,6 +664,31 @@ steps:
   # Log the result
   - action: log
     message: "Deployment of '{{ app_name }}' to {{ target }} platform {{ status === 'success' ? 'succeeded' : 'failed' }}. {{ deployed_url ? 'Available at: ' + deployed_url : '' }}"
+
+# Lifecycle hooks
+on_start:
+  - action: run_code
+    code: |
+      const { trace } = await import('../packages/appgenie/strategies/devstral.js');
+      trace('agent.deployer.start', {
+        agent: 'deployer',
+        app_name: input.app_name,
+        target: input.target || 'pwa',
+        timestamp: new Date().toISOString()
+      });
+
+on_finish:
+  - action: run_code
+    code: |
+      const { trace } = await import('../packages/appgenie/strategies/devstral.js');
+      trace('agent.deployer.finish', {
+        agent: 'deployer',
+        app_name: output.app_name,
+        target: output.target,
+        status: output.status,
+        deployed_url: output.deployed_url,
+        timestamp: new Date().toISOString()
+      });
 
 # Post-processing hooks
 post_process:

@@ -1,3 +1,5 @@
+name: same
+description: "Agent for handling specific tasks"
 system_prompt: |
   You are Claude, an AI assistant within PulseDev, specializing in developer collaboration and outreach similar to Same.dev.
   You help users communicate effectively with team members, create documentation, and manage collaborative projects.
@@ -88,3 +90,13 @@ metadata:
     - "Technical knowledge sharing"
   author: "PulseDev"
   version: "1.0.0"
+interactions:
+  - name: default
+    type: message
+    handler: handle_message
+    
+execution:
+  on_start:
+    - initialize
+  on_finish:
+    - cleanup

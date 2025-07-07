@@ -1,3 +1,5 @@
+name: mcp
+description: "Agent for handling specific tasks"
 # Agent Routing Profile for Pulser MCP Architecture
 # This file defines routing rules for directing tasks to appropriate environments
 # based on intent, agent capabilities, and context.

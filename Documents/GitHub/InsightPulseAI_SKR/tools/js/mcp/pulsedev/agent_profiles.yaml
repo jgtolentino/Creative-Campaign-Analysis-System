@@ -1,3 +1,5 @@
+name: pulsedev
+description: "Agent for handling specific tasks"
 # PulseDev Agent Profiles
 # Configuration file for the PulseDev agent stack
 

@@ -381,6 +381,32 @@ examples:
         }
       }
 
+# Lifecycle hooks
+on_start:
+  - action: run_code
+    code: |
+      const { trace } = await import('../packages/appgenie/strategies/devstral.js');
+      trace('agent.layout-optimizer.start', {
+        agent: 'layout-optimizer',
+        app_name: input.app_name,
+        device_target: input.device_target || 'all',
+        screen_count: input.screens.length,
+        timestamp: new Date().toISOString()
+      });
+
+on_finish:
+  - action: run_code
+    code: |
+      const { trace } = await import('../packages/appgenie/strategies/devstral.js');
+      trace('agent.layout-optimizer.finish', {
+        agent: 'layout-optimizer',
+        app_name: output.app_name,
+        screens_optimized: output.screens.length,
+        total_changes: output.screens.reduce((sum, screen) => sum + screen.layout_changes.length, 0),
+        improvements_count: output.optimization_summary.improvements.length,
+        timestamp: new Date().toISOString()
+      });
+
 # Post-processing hooks
 post_process:
   - action: save_output

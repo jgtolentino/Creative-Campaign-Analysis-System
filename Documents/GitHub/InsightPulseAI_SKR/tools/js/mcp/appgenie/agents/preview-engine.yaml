@@ -434,6 +434,33 @@ steps:
   - action: log
     message: "Preview Engine started for app '{{ app_name }}' at {{ preview_url }}"
 
+# Lifecycle hooks
+on_start:
+  - action: run_code
+    code: |
+      const { trace } = await import('../packages/appgenie/strategies/devstral.js');
+      trace('agent.preview-engine.start', {
+        agent: 'preview-engine',
+        app_name: input.app_name,
+        device: input.device || 'iphone',
+        theme: input.theme || 'light',
+        screen_count: input.screens.length,
+        timestamp: new Date().toISOString()
+      });
+
+on_finish:
+  - action: run_code
+    code: |
+      const { trace } = await import('../packages/appgenie/strategies/devstral.js');
+      trace('agent.preview-engine.finish', {
+        agent: 'preview-engine',
+        app_name: output.app_name,
+        preview_url: output.preview_url,
+        qr_code_url: output.qr_code_url,
+        screens_rendered: output.screens.length,
+        timestamp: new Date().toISOString()
+      });
+
 # Post-processing hooks
 post_process:
   - action: next_step

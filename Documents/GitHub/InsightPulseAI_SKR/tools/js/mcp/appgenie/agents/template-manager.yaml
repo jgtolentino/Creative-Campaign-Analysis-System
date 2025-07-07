@@ -1,12 +1,15 @@
 id: template-manager
 name: App Template Manager
-description: Provides customizable app templates based on app schema
+description: Renders full-stack code from natural-language specs
 version: 1.0.0
 
 # Runtime configuration
 type: template.handler
-runtime: node
+runtime: node18
+entrypoint: scaffolds/index.js
 timeout: 30
+outputs:
+  - dist/**/*
 
 # Input schema
 input_schema:
@@ -817,6 +820,32 @@ steps:
   # Log the results
   - action: log
     message: "Applied template '{{ template_name }}' to '{{ app_name }}' - generated files in {{ output_path }}"
+
+# Lifecycle hooks
+on_start:
+  - action: run_code
+    code: |
+      const { trace } = await import('../packages/appgenie/strategies/devstral.js');
+      trace('agent.template-manager.start', {
+        agent: 'template-manager',
+        schema_path: input.schema_path,
+        template_name: input.template_name || 'default',
+        has_customizations: Object.keys(input.customizations || {}).length > 0,
+        timestamp: new Date().toISOString()
+      });
+
+on_finish:
+  - action: run_code
+    code: |
+      const { trace } = await import('../packages/appgenie/strategies/devstral.js');
+      trace('agent.template-manager.finish', {
+        agent: 'template-manager',
+        app_name: output.app_name,
+        template_name: output.template_name,
+        output_path: output.output_path,
+        files_created: output.files_created,
+        timestamp: new Date().toISOString()
+      });
 
 # Post-processing hooks
 post_process:

@@ -2035,6 +2035,30 @@ examples:
         ]
       }
 
+# Lifecycle hooks
+on_start:
+  - action: run_code
+    code: |
+      const { trace } = await import('../packages/appgenie/strategies/devstral.js');
+      trace('agent.nlp-parser.start', {
+        agent: 'nlp-parser',
+        input_length: input.user_prompt.length,
+        timestamp: new Date().toISOString()
+      });
+
+on_finish:
+  - action: run_code
+    code: |
+      const { trace } = await import('../packages/appgenie/strategies/devstral.js');
+      trace('agent.nlp-parser.finish', {
+        agent: 'nlp-parser',
+        app_name: output.app_name,
+        screen_count: output.screens.length,
+        feature_count: output.features.length,
+        entity_count: output.entities.length,
+        timestamp: new Date().toISOString()
+      });
+
 # Post-processing hooks
 post_process:
   - action: save_output
@@ -2042,6 +2066,10 @@ post_process:
   
   - action: log_generation
     path: "./logs/nlp_parser_{{ timestamp }}.log"
+    
+  - action: call_module
+    path: memory/memory.js
+    fn: remember
     
   - action: next_step
     agent: template-manager

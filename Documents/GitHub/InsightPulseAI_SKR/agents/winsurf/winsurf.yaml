@@ -6,7 +6,6 @@ role: Autonomous Code Agent
 description: |
   Winsurf is an autonomous agent that performs complex coding tasks with minimal supervision.
   It can analyze, plan, and implement changes to the codebase in a structured and reliable way.
-
 capabilities:
   - autonomous_planning
   - code_analysis
@@ -15,20 +14,17 @@ capabilities:
   - automated_testing
   - code_generation
   - execution_monitoring
-
 parameters:
   default_model: claude-3-7-sonnet-20250219
   planning_model: claude-3-opus-20240229
   execution_parallelism: 4
   max_runtime_minutes: 30
   fallback_agent: stacey
-  
 permissions:
   file_read: true
   file_write: true
   command_execution: restricted
   network_access: true
-  
 integration:
   command: :winsurf
   cli_handler: ~/.pulser/commands/winsurf.sh
@@ -46,8 +42,9 @@ integration:
     - name: note
       description: Additional context or instructions for the agent
       required: false
-
 author: claude
 approved_by: claudia
 version: 1.0.0
 created: 2025-05-10T11:45:00+08:00
+resource_quota: 5000_tokens_per_min
+timeout_ms: 90000

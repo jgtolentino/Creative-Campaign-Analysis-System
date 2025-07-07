@@ -1,11 +1,9 @@
 version: "2.0"
 description: >
-  ACI.dev-style multi-API agent orchestration for Pulser. Allows Claude to interpret
-  natural language prompts and execute chained actions using integrated APIs (e.g. Tavily, Gmail, Hacker News).
+  ACI.dev-style multi-API agent orchestration for Pulser. Allows Claude to interpret natural language prompts and execute chained actions using integrated APIs (e.g. Tavily, Gmail, Hacker News).
 
 trigger_agent: claudepulser
 entrypoint: process_user_prompt
-
 agents:
   claudepulser:
     type: orchestrator
@@ -14,8 +12,7 @@ agents:
       - echo.signal_extractor
       - task_router.mcp_chain
     behavior: >
-      Parse high-level task intent, extract sub-actions (search, fetch, email, summarize),
-      delegate to appropriate agents, confirm execution path with Claudia, and route logs to SKR.
+      Parse high-level task intent, extract sub-actions (search, fetch, email, summarize), delegate to appropriate agents, confirm execution path with Claudia, and route logs to SKR.
 
   kalaw:
     type: knowledge_indexer
@@ -71,9 +68,75 @@ flow:
   - step: archive
     agent: claudepulser
     action: log metadata + route to SKR via Claudia
-
 tags:
   - ACI-style
   - multi-api-orchestration
   - agent-routing
   - mcp-chain
+monitoring:
+  enabled: true
+  metrics:
+    - response_time
+    - error_rate
+    - throughput
+    - resource_usage
+  alerts:
+    - type: threshold
+      metric: error_rate
+      threshold: 0.01
+      action: notify
+  healthcheck:
+    endpoint: /health
+    interval: 30s
+performance:
+  optimization: true
+  caching:
+    enabled: true
+    ttl: 3600
+  concurrency:
+    max_workers: 10
+    queue_size: 100
+  resource_limits:
+    max_memory: 512MB
+    max_cpu: 2.0
+    timeout: 300s
+error_handling:
+  retry:
+    enabled: true
+    max_attempts: 3
+    backoff: exponential
+  circuit_breaker:
+    enabled: true
+    threshold: 5
+    timeout: 60s
+  fallback:
+    enabled: true
+    strategy: graceful_degradation
+lifecycle:
+  on_start:
+    - action: validate_environment
+    - action: load_configuration
+    - action: initialize_connections
+  on_ready:
+    - action: register_with_discovery
+    - action: start_health_checks
+  on_shutdown:
+    - action: deregister_from_discovery
+    - action: cleanup_resources
+    - action: save_state
+observability:
+  logging:
+    level: info
+    format: json
+    outputs:
+      - stdout
+      - file: /logs/agent.log
+  tracing:
+    enabled: true
+    provider: opentelemetry
+    sampling_rate: 0.1
+  metrics:
+    enabled: true
+    provider: prometheus
+    endpoint: /metrics
+name: ACI Style Prompt Flow

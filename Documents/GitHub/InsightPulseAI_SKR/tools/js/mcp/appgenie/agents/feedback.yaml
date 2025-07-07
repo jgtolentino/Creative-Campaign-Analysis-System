@@ -252,6 +252,33 @@ examples:
         }
       }
 
+# Lifecycle hooks
+on_start:
+  - action: run_code
+    code: |
+      const { trace } = await import('../packages/appgenie/strategies/devstral.js');
+      trace('agent.feedback.start', {
+        agent: 'feedback',
+        app_name: input.app_name,
+        focus: input.focus || 'design',
+        screen_count: input.screens.length,
+        timestamp: new Date().toISOString()
+      });
+
+on_finish:
+  - action: run_code
+    code: |
+      const { trace } = await import('../packages/appgenie/strategies/devstral.js');
+      trace('agent.feedback.finish', {
+        agent: 'feedback',
+        app_name: output.app_name,
+        focus: output.focus,
+        overall_feedback_count: output.feedback.overall.length,
+        improvements_count: output.feedback.improvements.length,
+        screens_reviewed: Object.keys(output.feedback.screen_specific).length,
+        timestamp: new Date().toISOString()
+      });
+
 # Post-processing hooks
 post_process:
   - action: save_output

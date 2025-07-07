@@ -7,7 +7,7 @@
 cd "$(dirname "$0")"
 
 # Create necessary directories if they don't exist
-mkdir -p ./data ./logs ./dist
+mkdir -p ./data ./logs ./logs/agents ./dist
 
 # Colors for output
 GREEN='\033[0;32m'
@@ -39,6 +39,9 @@ show_help() {
   echo "  deploy [app_name]   Deploy an app"
   echo "  list                List all apps"
   echo "  serve               Start development server"
+  echo "  remember [key] [data] Save project context to memory"
+  echo "  recall [key]        Retrieve project context from memory"
+  echo "  trace [agent]       View agent execution traces"
   echo "  help                Show this help message"
   echo
   echo -e "${BLUE}Examples:${NC}"
@@ -224,6 +227,93 @@ case $COMMAND in
     echo -e "${YELLOW}Press Ctrl+C to stop${NC}"
     trap 'echo -e "\n${RED}Server stopped${NC}"; exit 0' INT
     while true; do sleep 1; done
+    ;;
+    
+  remember)
+    KEY=$1
+    shift
+    DATA="$@"
+    if [ -z "$KEY" ] || [ -z "$DATA" ]; then
+      echo -e "${RED}Error: Both key and data are required${NC}"
+      echo -e "Usage: ./dev.sh remember [key] [data]"
+      exit 1
+    fi
+    echo -e "${BLUE}Saving context to memory...${NC}"
+    echo -e "${BLUE}Key:${NC} $KEY"
+    
+    # Call the remember CLI script
+    npx tsx cli/remember.ts "$KEY" "$DATA"
+    
+    if [ $? -eq 0 ]; then
+      echo -e "${GREEN}Context saved successfully!${NC}"
+    else
+      echo -e "${RED}Failed to save context${NC}"
+      exit 1
+    fi
+    ;;
+    
+  recall)
+    KEY=$1
+    if [ -z "$KEY" ]; then
+      echo -e "${RED}Error: Key is required${NC}"
+      echo -e "Usage: ./dev.sh recall [key]"
+      exit 1
+    fi
+    echo -e "${BLUE}Retrieving context from memory...${NC}"
+    echo -e "${BLUE}Key:${NC} $KEY"
+    
+    # Call the recall functionality (assuming it's in cli/recall.ts)
+    npx tsx cli/recall.ts "$KEY"
+    
+    if [ $? -eq 0 ]; then
+      echo -e "${GREEN}Context retrieved successfully!${NC}"
+    else
+      echo -e "${YELLOW}No context found for key: $KEY${NC}"
+    fi
+    ;;
+    
+  trace)
+    AGENT=$1
+    echo -e "${BLUE}Displaying agent execution logs...${NC}"
+    
+    # Check if specific agent is requested
+    if [ -n "$AGENT" ]; then
+      echo -e "${BLUE}Agent:${NC} $AGENT"
+      LOG_FILE="./logs/agents/${AGENT}.log"
+      
+      if [ -f "$LOG_FILE" ]; then
+        echo -e "${GREEN}Showing logs for agent: $AGENT${NC}"
+        echo "----------------------------------------"
+        tail -n 50 "$LOG_FILE"
+      else
+        echo -e "${YELLOW}No logs found for agent: $AGENT${NC}"
+        echo -e "Available agents:"
+        if [ -d "./logs/agents" ]; then
+          ls -1 ./logs/agents/*.log 2>/dev/null | sed 's|./logs/agents/||g' | sed 's|.log||g' | sed 's/^/  /'
+        else
+          echo -e "  ${YELLOW}No agent logs available${NC}"
+        fi
+      fi
+    else
+      # Show all recent agent logs
+      echo -e "${GREEN}Recent agent execution logs:${NC}"
+      echo "----------------------------------------"
+      
+      if [ -d "./logs/agents" ]; then
+        # Show last 10 lines from each agent log
+        for log_file in ./logs/agents/*.log; do
+          if [ -f "$log_file" ]; then
+            AGENT_NAME=$(basename "$log_file" .log)
+            echo -e "\n${BLUE}[$AGENT_NAME]${NC}"
+            tail -n 10 "$log_file"
+            echo "----------------------------------------"
+          fi
+        done
+      else
+        echo -e "${YELLOW}No agent logs available${NC}"
+        echo -e "Agent logs will be created in: ./logs/agents/"
+      fi
+    fi
     ;;
     
   help|*)

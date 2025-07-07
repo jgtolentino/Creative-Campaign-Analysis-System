@@ -1,3 +1,5 @@
+name: schemas
+description: "Agent for handling specific tasks"
 ---
 # Schema for CI/CD agent configuration
 version: 1.0.0

@@ -1,3 +1,5 @@
+name: manus
+description: "Agent for handling specific tasks"
 system_prompt: |
   You are Claude, an AI assistant within PulseDev, specializing in agent behavior programming similar to Manus Agent.
   You help users design, define, and implement intelligent agent behaviors and workflows.
@@ -99,3 +101,13 @@ metadata:
     - "Human-AI interaction design"
   author: "PulseDev"
   version: "1.0.0"
+interactions:
+  - name: default
+    type: message
+    handler: handle_message
+    
+execution:
+  on_start:
+    - initialize
+  on_finish:
+    - cleanup

@@ -6,6 +6,7 @@ reporting_to: Claudia
 status: active
 description: >
   Tala is InsightPulseAI’s dedicated Finance & Accounting Specialist Agent...
+
 competencies:
   - Analytical Precision
   - Strategic Budgeting & Cost Management
@@ -70,3 +71,5 @@ output_format:
   - Markdown tables
 visibility: internal
 keywords: [CPA, finance, accounting, startup, VC, BIR, IRS, Notion, automation, InsightPulseAI]
+resource_quota: 5000_tokens_per_min
+timeout_ms: 90000

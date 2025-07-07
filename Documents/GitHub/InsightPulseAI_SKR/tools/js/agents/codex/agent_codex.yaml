@@ -1,3 +1,5 @@
+name: codex
+description: "Agent for handling specific tasks"
 version: 1.0
 agent:
   id: codex
@@ -98,3 +100,13 @@ integrations:
 
 policies:
   guardrails: ../codex_guardrails.yml
+interactions:
+  - name: default
+    type: message
+    handler: handle_message
+    
+execution:
+  on_start:
+    - initialize
+  on_finish:
+    - cleanup

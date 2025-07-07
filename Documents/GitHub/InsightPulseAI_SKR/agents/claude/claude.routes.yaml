@@ -1,16 +1,16 @@
+name: claude
+description: "Agent for handling specific tasks"
 # Claude Routing and Fallback Rules
 # Defines routing and fallback behavior for Claude agent
 
 version: "1.0"
 updated: "2025-05-15"
-
 # Default route when no specific pattern matches
 default_route:
   agent: claude
   mode: standard
   priority: medium
   description: "Default Claude agent behavior for general-purpose tasks"
-
 # Specialized routes for Claude's capabilities
 routes:
   # Code generation and modification routes
@@ -26,7 +26,6 @@ routes:
         max_tokens: 8192
         top_p: 0.95
         stop_sequences: ["```", "Human:", "User:"]
-
   # Technical documentation routes
   - pattern: "explain|document|describe|how|why|what|architecture"
     context: ["technical", "architecture", "system", "document", "process"]
@@ -39,7 +38,6 @@ routes:
         temperature: 0.3
         max_tokens: 4096
         top_p: 0.85
-
   # Data analysis routes
   - pattern: "analyze|examine|evaluate|assess|review"
     context: ["data", "metrics", "statistics", "trends", "analysis"]
@@ -52,7 +50,6 @@ routes:
         temperature: 0.2
         max_tokens: 6144
         top_p: 0.9
-
   # Creative content routes
   - pattern: "story|creative|imagine|design|narrative|conceptualize"
     context: ["story", "creative", "design", "narrative", "concept"]
@@ -66,7 +63,6 @@ routes:
         max_tokens: 8192
         top_p: 1.0
         presence_penalty: 0.2
-
 # Fallback rules determine what happens when primary routes fail
 fallback_rules:
   # Ordered list of fallbacks for code-oriented tasks
@@ -84,7 +80,6 @@ fallback_rules:
       - agent: claude
         mode: general
         description: "Last resort fallback for code tasks"
-
   # Ordered list of fallbacks for documentation tasks
   documentation_fallbacks:
     sequence:
@@ -100,7 +95,6 @@ fallback_rules:
       - agent: claude
         mode: general
         description: "Last resort fallback for documentation tasks"
-
   # Ordered list of fallbacks for analysis tasks
   analysis_fallbacks:
     sequence:
@@ -116,7 +110,6 @@ fallback_rules:
       - agent: claude
         mode: general
         description: "Last resort fallback for analysis tasks"
-
   # Universal fallback chain - last resort when all else fails
   universal_fallback:
     sequence:
@@ -130,7 +123,6 @@ fallback_rules:
         description: "Escalate to Claudia orchestrator as final fallback"
       - response: "I'm unable to process this request. Please try rephrasing or contact support."
         description: "Final error response when all fallbacks fail"
-
 # Recovery strategies for failed requests
 recovery_strategies:
   timeout_recovery:
@@ -138,15 +130,12 @@ recovery_strategies:
     max_retries: 2
     backoff_seconds: 5
     description: "Retry with simplified prompt when timeout occurs"
-
   error_recovery:
     strategy: "fallback_chain"
     description: "Follow fallback chain when errors occur"
-    
   content_policy_recovery:
     strategy: "clarify_and_retry"
     description: "Ask for clarification on potentially problematic content"
-
 # Exception handling
 exceptions:
   - pattern: "urgent|emergency|critical"
@@ -156,7 +145,6 @@ exceptions:
       parameters:
         temperature: 0.1
       description: "Route urgent requests directly to Claudia"
-
   - pattern: "confidential|sensitive|private"
     route:
       agent: claude
@@ -164,3 +152,5 @@ exceptions:
       parameters:
         log_level: minimal
       description: "Handle sensitive requests with enhanced privacy"
+resource_quota: 5000_tokens_per_min
+timeout_ms: 90000

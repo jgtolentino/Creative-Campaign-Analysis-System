@@ -1,3 +1,7 @@
+name: voice_calendar_deploy
+description: "Agent for handling specific tasks"
+version: "1.0.0"
+status: active
 # Voice Calendar Agent - Pulser Runtime Configuration Patch
 # Add this to your .pulserrc file
 

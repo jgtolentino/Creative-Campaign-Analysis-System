@@ -380,6 +380,32 @@ steps:
   - action: log
     message: "UI Editor started for app '{{ app_name }}' at {{ editor_url }} - {{ screens.length }} screens available"
 
+# Lifecycle hooks
+on_start:
+  - action: run_code
+    code: |
+      const { trace } = await import('../packages/appgenie/strategies/devstral.js');
+      trace('agent.ui-editor.start', {
+        agent: 'ui-editor',
+        app_name: input.app_name,
+        mode: input.mode || 'visual',
+        screens_dir: input.screens_dir,
+        timestamp: new Date().toISOString()
+      });
+
+on_finish:
+  - action: run_code
+    code: |
+      const { trace } = await import('../packages/appgenie/strategies/devstral.js');
+      trace('agent.ui-editor.finish', {
+        agent: 'ui-editor',
+        app_name: output.app_name,
+        editor_url: output.editor_url,
+        screen_count: output.screens.length,
+        save_path: output.save_path,
+        timestamp: new Date().toISOString()
+      });
+
 # Post-processing hooks
 post_process:
   - action: next_step
